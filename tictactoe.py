@@ -52,16 +52,27 @@ def result(board, action):
     """
     Returns the board that results from making move (i, j) on the board.
     """
-    move=player(board)
-    board[action[0]][action[1]]=move
-    return(board)
+    if action is None:
+        return board.copy()
+
+    output = [row.copy() for row in board]
+    move = player(board)
+    output[action[0]][action[1]] = move
+    return output
+    # board[action[0]][action[1]]=move
+    # return(board)
 
 
 def winner(board):
     """
     Returns the winner of the game, if there is one.
     """
-    raise NotImplementedError
+    x=utility(board)
+    if x==1:
+        return X
+    elif x==-1:
+        return O
+    return None
 
 
 def terminal(board):
@@ -105,5 +116,23 @@ def minimax(board):
     """
     Returns the optimal action for the current player on the board.
     """
-    
-    raise NotImplementedError
+    chance=player(board)
+    possible_actions=actions(board)
+    current=utility(board)
+    optimal_action=None
+    for action in possible_actions:
+        new_board=result(board, action)
+        if chance==X:
+            if utility(new_board)>current:
+                optimal_action=action
+            elif not terminal(new_board):
+                print(".\n_")
+                optimal_action=minimax(new_board)
+        if chance==O:
+            if utility(new_board)<current:
+                optimal_action=action
+            elif not terminal(new_board):
+                print(":\n__")
+                optimal_action=minimax(new_board)
+    return optimal_action
+    # raise NotImplementedError
